@@ -25,13 +25,23 @@ io.on('connection', (socket) => {
 });
 
 function sendRealTimeMessage({ userId, customerId, message }) {
-    const client = clients[customerId];
-    if (client) {
-        client.emit('newMessage', { senderId: userId, message }); // Emit message to the receiver
+    const customerClient  = clients[customerId];
+    if (customerClient ) {
+        customerClient.emit('newMessage', { senderId: userId, message }); // Emit message to the receiver
         console.log(`Real-time message sent to user ${customerId}`);
     } else {
         console.error(`User ${customerId} is not connected.`);
     }
+
+     // Send back to agent
+  const agentClient = clients[userId];
+  if (agentClient) {
+    agentClient.emit('newMessage', { senderId: userId, message });
+    console.log(`📩 Real-time message also sent back to agent ${userId}`);
+  } else {
+    console.warn(`⚠️ Agent ${userId} not connected`);
+  }
+  
 }
 
 module.exports = { io, sendRealTimeMessage };

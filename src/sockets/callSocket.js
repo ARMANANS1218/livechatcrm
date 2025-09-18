@@ -56,7 +56,7 @@ module.exports = function initCallSocket(io, connectedUsers) {
         // Notify receiver if online
         io.to(receiverId.toString()).emit("call:incoming", {
           roomId,
-          from: userId,
+          from: userId,     
         });
 
         // Acknowledge to caller
