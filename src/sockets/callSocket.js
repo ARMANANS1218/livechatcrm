@@ -34,7 +34,7 @@ module.exports = function initCallSocket(io, connectedUsers) {
      * Caller emits after creating Room via REST API:
      *  payload: { roomId, receiverId }
      */
-    socket.on("call:init", async ({ roomId, receiverId }) => {
+    socket.on("call:init", async ({ roomId, receiverId, callType }) => {
       try {
         if (!userId) return socket.emit("call:error", { message: "Unauthorized" });
         if (!roomId || !receiverId) {
@@ -56,7 +56,8 @@ module.exports = function initCallSocket(io, connectedUsers) {
         // Notify receiver if online
         io.to(receiverId.toString()).emit("call:incoming", {
           roomId,
-          from: userId,     
+          from: userId,
+          callType
         });
 
         // Acknowledge to caller
